@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Workouts">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f6b63">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Workouts</title>
+<style>
+:root{--bg:#f1f3f2;--card:#fff;--ink:#17201d;--mute:#66726e;--line:#d3d9d6;--acc:#0f6b63;--accink:#fff;--warn:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#101514;--card:#1a2220;--ink:#e8eeec;--mute:#93a19c;--line:#2e3a37;--acc:#3fb5a8;--accink:#06201d;--warn:#ff8a80}}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.3 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;display:flex;flex-direction:column;-webkit-text-size-adjust:100%}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--card);border-bottom:1px solid var(--line)}
+.bar h1{font-size:17px;margin:0;flex:1;font-weight:700;letter-spacing:.01em}
+button,select,input{font:inherit;color:var(--ink)}
+button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;min-height:40px}
+button.pri{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:700}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.meta{display:flex;gap:6px;padding:8px 10px;align-items:center}
+.meta label{font-size:12px;color:var(--mute);display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.meta select,.meta input{width:100%;min-height:40px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:6px 8px}
+.view{flex:1;min-height:0;display:none;flex-direction:column}
+.view.on{display:flex}
+.grid{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;background:var(--card);border-top:1px solid var(--line)}
+table{border-collapse:separate;border-spacing:0;table-layout:fixed}
+th{position:sticky;top:0;z-index:2;background:var(--bg);font-size:12px;font-weight:600;color:var(--mute);text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
+td{border-bottom:1px solid var(--line);padding:0}
+td input,td select{width:100%;border:0;background:transparent;padding:11px 6px;min-height:44px;border-radius:0}
+td input:focus{background:color-mix(in srgb,var(--acc) 12%,transparent)}
+.num input{font-variant-numeric:tabular-nums}
+.x{width:36px}.x button{border:0;background:none;color:var(--warn);padding:0;width:36px;font-size:20px}
+.foot{display:flex;gap:8px;padding:8px 10px;background:var(--bg);align-items:center}
+.foot .grow{flex:1}
+.save{flex:1;min-height:48px;font-size:18px}
+#status{font-size:12px;color:var(--mute);padding:0 10px 6px;min-height:18px}
+#status.err{color:var(--warn)}
+.cfg{padding:12px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.cfg label{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:3px}
+.cfg input{border:1px solid var(--line);border-radius:8px;background:var(--card);padding:10px}
+.cfg p{font-size:13px;color:var(--mute);margin:0}
+.empty{padding:16px;color:var(--mute)}
+</style>
+</head>
+<body>
+
+<section id="cur" class="view on">
+  <div class="bar"><h1>Workouts</h1><button id="toHist">History</button><button id="toCfg" aria-label="Settings">⚙</button></div>
+  <div class="meta">
+    <label>User<select id="user"><option>P</option><option>C</option></select></label>
+    <label>Day<select id="day"><option>1</option><option>2</option></select></label>
+    <label>Date<input id="date" type="date"></label>
+  </div>
+  <div class="grid"><table id="curT"></table></div>
+  <div class="foot"><button id="add">+ Exercise</button><span class="grow"></span></div>
+  <div class="foot" style="padding-top:0"><button class="pri save" id="save">SAVE</button></div>
+  <div id="status"></div>
+</section>
+
+<section id="hist" class="view">
+  <div class="bar"><button id="back">‹ Back</button><h1>History</h1><button id="csv">Email CSV</button></div>
+  <div class="meta"><label>User<select id="hUser"><option value="">All</option><option>P</option><option>C</option></select></label></div>
+  <div class="grid"><table id="hT"></table></div>
+  <div id="hStatus" style="font-size:12px;color:var(--mute);padding:6px 10px"></div>
+</section>
+
+<section id="set" class="view">
+  <div class="bar"><button id="back2">‹ Back</button><h1>GitHub sync</h1></div>
+  <div class="cfg">
+    <p>Data is saved as one JSON file in your GitHub repository. Use a fine-grained token limited to that repository with Contents read and write access. The token stays on this phone.</p>
+    <label>GitHub username<input id="cOwner" autocapitalize="none" autocorrect="off"></label>
+    <label>Repository name<input id="cRepo" autocapitalize="none" autocorrect="off"></label>
+    <label>Branch<input id="cBranch" value="main" autocapitalize="none" autocorrect="off"></label>
+    <label>File path<input id="cPath" value="workouts.json" autocapitalize="none" autocorrect="off"></label>
+    <label>Access token<input id="cToken" type="password" autocapitalize="none" autocorrect="off"></label>
+    <button class="pri" id="cSave">Save and sync</button>
+  </div>
+  <div id="cStatus" style="font-size:13px;padding:0 12px;color:var(--mute)"></div>
+</section>
+
+<script>
+const $=s=>document.querySelector(s);
+const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let cfg=lsGet('wk_cfg',{}), E=lsGet('wk_entries',[]), sha=lsGet('wk_sha',null);
+let cur={rows:[]}, pushT=null;
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2));
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+
+function status(msg,err,el='#status'){const n=$(el);n.textContent=msg;n.className=err?'err':'';}
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));}
+function persist(){lsSet('wk_entries',E);lsSet('wk_sha',sha);}
+
+/* ---------- GitHub ---------- */
+const ready=()=>cfg.owner&&cfg.repo&&cfg.token;
+const url=()=>`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${encodeURIComponent(cfg.path||'workouts.json').replace(/%2F/g,'/')}`;
+const hdr=()=>({Authorization:'Bearer '+cfg.token,Accept:'application/vnd.github+json'});
+const enc=t=>btoa(unescape(encodeURIComponent(t)));
+const dec=b=>decodeURIComponent(escape(atob(b.replace(/\n/g,''))));
+async function pull(){
+  const r=await fetch(url()+'?ref='+encodeURIComponent(cfg.branch||'main')+'&t='+Date.now(),{headers:hdr(),cache:'no-store'});
+  if(r.status===404){sha=null;return null}
+  if(!r.ok)throw new Error('GitHub said '+r.status);
+  const j=await r.json(); sha=j.sha; return JSON.parse(dec(j.content)||'[]');
+}
+function merge(remote){const m=new Map(remote.map(e=>[e.id,e]));E.forEach(e=>m.set(e.id,e));return [...m.values()];}
+async function push(retry){
+  if(!ready())return;
+  const body={message:'Update workouts',content:enc(JSON.stringify(E)),branch:cfg.branch||'main'};
+  if(sha)body.sha=sha;
+  const r=await fetch(url(),{method:'PUT',headers:{...hdr(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if((r.status===409||r.status===422)&&!retry){const rem=await pull();E=merge(rem||[]);return push(true);}
+  if(!r.ok)throw new Error('GitHub said '+r.status);
+  sha=(await r.json()).content.sha; persist();
+}
+async function sync(el){
+  if(!ready()){status('Saved on this phone. Add GitHub details in ⚙ to back up.',false,el);return}
+  try{status('Saving to GitHub…',false,el);await push();status('Saved to GitHub.',false,el)}
+  catch(e){status('Saved on this phone, but GitHub failed: '+e.message+'. Check ⚙ settings and signal.',true,el)}
+}
+function queuePush(){clearTimeout(pushT);status('Edited. Saving…',false,'#hStatus');pushT=setTimeout(()=>sync('#hStatus'),1500);}
+
+/* ---------- Current screen ---------- */
+function lastEntry(user){let b=null;E.forEach(e=>{if(e.user===user&&(!b||e.date>=b.date))b=e});return b;}
+function nextDay(user){const l=lastEntry(user);return l?(String(l.day)==='1'?'2':'1'):'1';}
+function lastRows(user,day){
+  const m=E.filter(e=>e.user===user&&String(e.day)===String(day)); if(!m.length)return [];
+  const d=m.reduce((a,e)=>e.date>a?e.date:a,''); return m.filter(e=>e.date===d).map(({name,weight,reps,settings,comments})=>({name,weight,reps,settings,comments}));
+}
+function loadRows(){
+  cur.rows=lastRows($('#user').value,$('#day').value);
+  if(!cur.rows.length)cur.rows=[blank()];
+  drawCur();
+}
+const blank=()=>({name:'',weight:'',reps:'',settings:'',comments:''});
+function drawCur(){
+  const cols=[['Exercise Name','44vw'],['Weight','22vw'],['Reps','22vw'],['Machine Settings','170px'],['Comments','220px'],['','36px']];
+  let h='<colgroup>'+cols.map(c=>`<col style="width:${c[1]}">`).join('')+'</colgroup><thead><tr>'+cols.map(c=>`<th>${c[0]}</th>`).join('')+'</tr></thead><tbody>';
+  cur.rows.forEach((r,i)=>{
+    h+=`<tr><td><input data-i="${i}" data-f="name" value="${esc(r.name)}" autocapitalize="words"></td>`+
+    `<td class="num"><input data-i="${i}" data-f="weight" value="${esc(r.weight)}" inputmode="decimal"></td>`+
+    `<td class="num"><input data-i="${i}" data-f="reps" value="${esc(r.reps)}" inputmode="numeric"></td>`+
+    `<td><input data-i="${i}" data-f="settings" value="${esc(r.settings)}"></td>`+
+    `<td><input data-i="${i}" data-f="comments" value="${esc(r.comments)}"></td>`+
+    `<td class="x"><button data-del="${i}" aria-label="Remove row">×</button></td></tr>`;
+  });
+  $('#curT').innerHTML=h+'</tbody>';
+}
+$('#curT').addEventListener('input',e=>{const i=e.target.dataset.i;if(i!==undefined)cur.rows[i][e.target.dataset.f]=e.target.value;});
+$('#curT').addEventListener('click',e=>{const d=e.target.dataset.del;if(d!==undefined){cur.rows.splice(+d,1);if(!cur.rows.length)cur.rows=[blank()];drawCur();}});
+$('#add').onclick=()=>{cur.rows.push(blank());drawCur();const g=$('.grid');g.scrollTop=g.scrollHeight;};
+$('#user').onchange=()=>{$('#day').value=nextDay($('#user').value);loadRows();};
+$('#day').onchange=loadRows;
+$('#save').onclick=async()=>{
+  const user=$('#user').value,day=$('#day').value,date=$('#date').value||today();
+  E=E.filter(e=>!(e.user===user&&String(e.day)===day&&e.date===date));
+  cur.rows.filter(r=>Object.values(r).some(v=>String(v).trim())).forEach(r=>E.push({id:uid(),date,user,day,...r}));
+  persist(); await sync('#status');
+};
+
+/* ---------- History ---------- */
+function drawHist(){
+  const f=$('#hUser').value;
+  const list=E.filter(e=>!f||e.user===f).sort((a,b)=>b.date.localeCompare(a.date)||String(a.day).localeCompare(String(b.day)));
+  const cols=[['Date','128px'],['Day','52px'],['Exercise Name','150px'],['Weight','72px'],['Reps','64px'],['Machine Settings','170px'],['Comments','220px'],['User','52px'],['','36px']];
+  let h='<colgroup>'+cols.map(c=>`<col style="width:${c[1]}">`).join('')+'</colgroup><thead><tr>'+cols.map(c=>`<th>${c[0]}</th>`).join('')+'</tr></thead><tbody>';
+  if(!list.length){$('#hT').innerHTML='<tbody><tr><td class="empty">No workouts saved yet. Save one on the main screen.</td></tr></tbody>';return}
+  list.forEach(e=>{
+    const c=(f,t='text',x='')=>`<td><input data-id="${e.id}" data-f="${f}" type="${t}" value="${esc(e[f])}" ${x}></td>`;
+    h+='<tr>'+c('date','date')+`<td><select data-id="${e.id}" data-f="day"><option${String(e.day)==='1'?' selected':''}>1</option><option${String(e.day)==='2'?' selected':''}>2</option></select></td>`+
+    c('name')+c('weight','text','inputmode="decimal"')+c('reps','text','inputmode="numeric"')+c('settings')+c('comments')+
+    `<td><select data-id="${e.id}" data-f="user"><option${e.user==='P'?' selected':''}>P</option><option${e.user==='C'?' selected':''}>C</option></select></td>`+
+    `<td class="x"><button data-del="${e.id}" aria-label="Delete entry">×</button></td></tr>`;
+  });
+  $('#hT').innerHTML=h+'</tbody>';
+}
+$('#hT').addEventListener('change',e=>{
+  const id=e.target.dataset.id; if(!id)return;
+  const row=E.find(x=>x.id===id); if(!row)return;
+  row[e.target.dataset.f]=e.target.value; persist(); queuePush();
+});
+$('#hT').addEventListener('click',e=>{
+  const id=e.target.dataset.del; if(!id)return;
+  if(!confirm('Delete this entry?'))return;
+  E=E.filter(x=>x.id!==id); persist(); drawHist(); queuePush();
+});
+$('#hUser').onchange=drawHist;
+
+function toCSV(){
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const rows=[...E].sort((a,b)=>a.date.localeCompare(b.date)||String(a.day).localeCompare(String(b.day)));
+  return ['Date','User','Day','Exercise Name','Weight','Repetitions','Machine Settings','Comments'].map(q).join(',')+'\n'+
+    rows.map(e=>[e.date,e.user,e.day,e.name,e.weight,e.reps,e.settings,e.comments].map(q).join(',')).join('\n');
+}
+$('#csv').onclick=async()=>{
+  const csv=toCSV(), name='workouts-'+today()+'.csv';
+  try{
+    const file=new File([csv],name,{type:'text/csv'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Workout data',text:'Workout data (CSV) attached.'});return}
+  }catch(e){if(e.name==='AbortError')return}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;a.click();
+  status('CSV downloaded. Attach it to an email from the Files app.',false,'#hStatus');
+};
+
+/* ---------- Navigation & settings ---------- */
+$('#toHist').onclick=()=>{drawHist();show('hist')};
+$('#back').onclick=()=>{show('cur');loadRows()};
+$('#toCfg').onclick=()=>{
+  ['Owner','Repo','Branch','Path','Token'].forEach(k=>{const v=cfg[k.toLowerCase()];if(v)$('#c'+k).value=v});
+  show('set');
+};
+$('#back2').onclick=()=>show('cur');
+$('#cSave').onclick=async()=>{
+  cfg={owner:$('#cOwner').value.trim(),repo:$('#cRepo').value.trim(),branch:$('#cBranch').value.trim()||'main',path:$('#cPath').value.trim()||'workouts.json',token:$('#cToken').value.trim()};
+  lsSet('wk_cfg',cfg);
+  try{
+    status('Connecting…',false,'#cStatus');
+    const rem=await pull(); E=merge(rem||[]); persist();
+    if(!rem||E.length!==rem.length)await push();
+    status('Connected. '+E.length+' entries synced.',false,'#cStatus');
+  }catch(e){status('Could not connect: '+e.message+'. Check the names and token.',true,'#cStatus')}
+};
+
+/* ---------- Start ---------- */
+async function start(){
+  $('#date').value=today();
+  $('#user').value=lsGet('wk_user','P'); 
+  $('#user').addEventListener('change',()=>lsSet('wk_user',$('#user').value));
+  if(ready()){try{const rem=await pull();if(rem){E=merge(rem);persist()}}catch(e){status('Offline: showing data saved on this phone.',false)}}
+  $('#day').value=nextDay($('#user').value);
+  loadRows();
+}
+start();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
