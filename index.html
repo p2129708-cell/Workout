@@ -232,7 +232,7 @@ $('#cSave').onclick=async()=>{
 /* ---------- Start ---------- */
 async function start(){
   $('#date').value=today();
-  $('#user').value=lsGet('wk_user','P'); 
+  $('#user').value=lsGet('wk_user','Paul'); 
   $('#user').addEventListener('change',()=>lsSet('wk_user',$('#user').value));
   if(ready()){try{const rem=await pull();if(rem){E=merge(rem);persist()}}catch(e){status('Offline: showing data saved on this phone.',false)}}
   $('#day').value=nextDay($('#user').value);
