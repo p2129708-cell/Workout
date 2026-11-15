@@ -176,7 +176,7 @@ function drawHist(){
     const c=(f,t='text',x='')=>`<td><input data-id="${e.id}" data-f="${f}" type="${t}" value="${esc(e[f])}" ${x}></td>`;
     h+='<tr>'+c('date','date')+`<td><select data-id="${e.id}" data-f="day"><option${String(e.day)==='1'?' selected':''}>1</option><option${String(e.day)==='2'?' selected':''}>2</option></select></td>`+
     c('name')+c('weight','text','inputmode="decimal"')+c('reps','text','inputmode="numeric"')+c('settings')+c('comments')+
-    `<td><select data-id="${e.id}" data-f="user"><option${e.user==='P'?' selected':''}>P</option><option${e.user==='C'?' selected':''}>C</option></select></td>`+
+    `<td><select data-id="${e.id}" data-f="user"><option${e.user==='Paul'?' selected':''}>Paul</option><option${e.user==='Corrina'?' selected':''}>Corrina</option></select></td>`+
     `<td class="x"><button data-del="${e.id}" aria-label="Delete entry">×</button></td></tr>`;
   });
   $('#hT').innerHTML=h+'</tbody>';
