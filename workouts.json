@@ -1,26 +1,6 @@
 {
  "entries": [
   {
-   "id": "7b0gxlf6mwik9wfz",
-   "date": "2026-11-15",
-   "user": "Paul",
-   "day": 1,
-   "exercise": "arms",
-   "weight": "",
-   "reps": "",
-   "comments": ""
-  },
-  {
-   "id": "g5qwmj6fmwika8rc",
-   "date": "2026-11-16",
-   "user": "Paul",
-   "day": 2,
-   "exercise": "legs",
-   "weight": "",
-   "reps": "",
-   "comments": ""
-  },
-  {
    "id": "vjpps5aqmwimauon",
    "date": "2026-11-13",
    "user": "Paul",
