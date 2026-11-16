@@ -19,6 +19,66 @@
    "weight": "75-65",
    "reps": "10",
    "comments": ""
+  },
+  {
+   "id": "l6eqda55mwimf88v",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Lat Split",
+   "weight": "105-105",
+   "reps": "10",
+   "comments": "Reg 100-85"
+  },
+  {
+   "id": "w69tgyw9mwimh7sc",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Leg Curl",
+   "weight": "80-75",
+   "reps": "",
+   "comments": "9"
+  },
+  {
+   "id": "z79u5wlcmwimi5zq",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Bench Press",
+   "weight": "105-105",
+   "reps": "",
+   "comments": ""
+  },
+  {
+   "id": "4wrtr17pmwimixcc",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Bicep Curl",
+   "weight": "22.5-17.5",
+   "reps": "",
+   "comments": ""
+  },
+  {
+   "id": "w31n9021mwimjdhn",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Hammer Curl",
+   "weight": "22.5-17.5",
+   "reps": "",
+   "comments": ""
+  },
+  {
+   "id": "wytk7yqfmwimk70j",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Pushups",
+   "weight": "",
+   "reps": "10-9",
+   "comments": ""
   }
  ]
 }
