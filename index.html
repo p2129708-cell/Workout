@@ -87,6 +87,7 @@ const persist=()=>localStorage.setItem(LS+'db',JSON.stringify(db));
 const status=t=>{$('#st').textContent=t;$('#st2').textContent=t};
 const enc=s=>{let b='';new TextEncoder().encode(s).forEach(c=>b+=String.fromCharCode(c));return btoa(b)};
 const dec=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g,'')),c=>c.charCodeAt(0)));
+const parse=s=>{const t=dec(s||'').trim();const o=t?JSON.parse(t):{};if(!Array.isArray(o.entries))o.entries=[];return o};
 
 /* ---------- GitHub sync ---------- */
 const gh=(m,body)=>{const br=cfg.branch||'main',p=cfg.path||'workouts.json';
@@ -94,7 +95,7 @@ const gh=(m,body)=>{const br=cfg.branch||'main',p=cfg.path||'workouts.json';
  {method:m,cache:'no-store',headers:{Authorization:'Bearer '+cfg.token,Accept:'application/vnd.github+json'},body:body&&JSON.stringify(body)})};
 async function pull(){
  if(!cfg.token||!cfg.repo)return;
- try{const r=await gh('GET');if(r.status===200){const j=await r.json();db=JSON.parse(dec(j.content));persist()}
+ try{const r=await gh('GET');if(r.status===200){const j=await r.json();db=parse(j.content);persist()}
   else if(r.status!==404)throw new Error('GitHub '+r.status)}catch(e){status('Load failed ('+e.message+'). Showing phone copy.')}
 }
 async function push(fn){
@@ -102,7 +103,7 @@ async function push(fn){
  status('Saving to GitHub…');
  try{for(let i=0;i<3;i++){
   const r=await gh('GET');let remote={entries:[]},sha;
-  if(r.status===200){const j=await r.json();sha=j.sha;remote=JSON.parse(dec(j.content))}else if(r.status!==404)throw new Error('GitHub '+r.status);
+  if(r.status===200){const j=await r.json();sha=j.sha;remote=parse(j.content)}else if(r.status!==404)throw new Error('GitHub '+r.status);
   fn(remote);
   const p=await gh('PUT',{message:'Update workouts',content:enc(JSON.stringify(remote,null,1)),branch:cfg.branch||'main',sha});
   if(p.ok){db=remote;persist();status('Saved to GitHub ✓');return}
