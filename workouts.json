@@ -1,12 +1,22 @@
 {
  "entries": [
   {
-   "id": "vjpps5aqmwimauon",
+   "id": "20c0xj5pmwimc1ei",
    "date": "2026-11-13",
    "user": "Paul",
    "day": 1,
    "exercise": "Leg Press",
    "weight": "190-180",
+   "reps": "10",
+   "comments": ""
+  },
+  {
+   "id": "nxkrl2jemwimdfl1",
+   "date": "2026-11-13",
+   "user": "Paul",
+   "day": 1,
+   "exercise": "Seated Ham",
+   "weight": "75-65",
    "reps": "10",
    "comments": ""
   }
