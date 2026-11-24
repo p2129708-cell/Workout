@@ -451,76 +451,6 @@
    "comments": ""
   },
   {
-   "id": "x9296h95mwryyf27",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "Shoulder Press",
-   "weight": "25lbs",
-   "reps": "",
-   "comments": "Middle bar"
-  },
-  {
-   "id": "kwsiil08mwrz17vk",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "Seat Row",
-   "weight": "45lbs",
-   "reps": "",
-   "comments": "Lower bar, 1 circle out"
-  },
-  {
-   "id": "tfcl30s4mwrz8lu9",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "Leg Extensions",
-   "weight": "40lbs",
-   "reps": "",
-   "comments": ""
-  },
-  {
-   "id": "wi0vuovjmwrzbdnt",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "Ham Curls",
-   "weight": "35lbs",
-   "reps": "",
-   "comments": ""
-  },
-  {
-   "id": "2pxku6v1mwrzbuf3",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "Tricep Pull Down",
-   "weight": "15lbs",
-   "reps": "",
-   "comments": ""
-  },
-  {
-   "id": "4whbb1lqmwrzkxvp",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "Dead Lifts",
-   "weight": "12lbs",
-   "reps": "",
-   "comments": ""
-  },
-  {
-   "id": "elcmaksbmws4mk85",
-   "date": "2026-11-22",
-   "user": "Corrina",
-   "day": 2,
-   "exercise": "1 Mile Lap",
-   "weight": "16 minutes",
-   "reps": "Walking",
-   "comments": ""
-  },
-  {
    "id": "21gtut8dmwuv79w6",
    "date": "2026-11-24",
    "user": "Paul",
@@ -619,6 +549,66 @@
    "weight": "1mi",
    "reps": "",
    "comments": ".25 4.5 .75 4.3"
+  },
+  {
+   "id": "8kvl80tumwuvgtti",
+   "date": "2026-11-22",
+   "user": "Corrina",
+   "day": 1,
+   "exercise": "Leg Press",
+   "weight": "110",
+   "reps": "2/10",
+   "comments": ""
+  },
+  {
+   "id": "hao94890mwuvgtti",
+   "date": "2026-11-22",
+   "user": "Corrina",
+   "day": 1,
+   "exercise": "Quad Extensions",
+   "weight": "40",
+   "reps": "2/10",
+   "comments": ""
+  },
+  {
+   "id": "vy1oshjfmwuvgtti",
+   "date": "2026-11-22",
+   "user": "Corrina",
+   "day": 1,
+   "exercise": "Ham Curls",
+   "weight": "35",
+   "reps": "2/10",
+   "comments": ""
+  },
+  {
+   "id": "7tlc0cicmwuvgtti",
+   "date": "2026-11-22",
+   "user": "Corrina",
+   "day": 1,
+   "exercise": "Bench Press",
+   "weight": "25",
+   "reps": "2/10",
+   "comments": "Lower handle"
+  },
+  {
+   "id": "5nypstlfmwuvgtti",
+   "date": "2026-11-22",
+   "user": "Corrina",
+   "day": 1,
+   "exercise": "Pull Down",
+   "weight": "50",
+   "reps": "2/10",
+   "comments": ""
+  },
+  {
+   "id": "yg1ucfkrmwuvgtti",
+   "date": "2026-11-22",
+   "user": "Corrina",
+   "day": 1,
+   "exercise": "Biceps",
+   "weight": "10",
+   "reps": "2/10",
+   "comments": "Second set 7.5"
   }
  ]
 }
